@@ -6,7 +6,7 @@ import { createTopic } from "@/actions";
 
 interface FormButtonProps {
   children: React.ReactNode;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 export default function FormButton({ children, isLoading }: FormButtonProps) {

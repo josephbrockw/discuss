@@ -18,7 +18,13 @@ export default function HeaderAuth() {
     
     let authContent: React.ReactNode;
     if (session.status === "loading") {
-        authContent = null;
+        authContent = (
+            <NavbarItem>
+                <Button isLoading color="primary" variant="flat">
+                    Loading...
+                </Button>
+            </NavbarItem>
+        );
     } else if (session.data?.user) {
         authContent = (
             <Popover placement="left">

@@ -11,7 +11,7 @@ import HeaderAuth from "@/components/client/HeaderAuth";
 
 export default function Header() {
     return (
-        <Navbar className="shandow mb-6">
+        <Navbar className="shadow mb-6">
             <NavbarBrand>
                 <Link href="/" className="font-bold">
                     Discuss
