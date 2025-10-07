@@ -1,4 +1,6 @@
 import NextAuth from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { Session } from "next-auth";
 import Github from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
@@ -21,8 +23,8 @@ export const { handlers: { GET, POST }, auth, signOut, signIn } = NextAuth({
   ],
   callbacks: {
     // usually not needed, but here to show how to extend the session object
-    async session({ session, user }: any) {
-        if (session && user) {
+    async session({ session, user }: { session: Session; user: AdapterUser }) {
+        if (session.user && user) {
             session.user.id = user.id;
         }
 

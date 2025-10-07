@@ -1,37 +1,16 @@
 'use client';
 
-import { Button } from "@nextui-org/react";
-import * as actions from "@/actions";
-import Profile from "@/components/profile";
-import { signOut, useSession } from "next-auth/react";
+import TopicCreateForm from "@/components/topics/TopicCreateForm";
 
 export default function Home() {
-  const { data: session } = useSession();
-
   return (
-    <div>
-      <form action={actions.signIn}>
-        <Button type="submit">Sign In</Button>
-      </form>
-      <Button 
-        type="button" 
-        onClick={() => signOut()}
-      >
-        Sign Out
-      </Button>
-
-      { 
-        session?.user ? (
-          <div>
-            <p>Welcome, {session.user.name}!</p>
-            <p>{JSON.stringify(session.user)}</p>
-          </div>
-        ) : (
-          <p>Please sign in.</p>
-        )
-      }
-
-      <Profile />
+    <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="col-span-3 p-4">
+        <h1 className="text-xl m-2">Top Posts</h1>
+      </div>
+      <div className="col-span-1 p-4">
+        <TopicCreateForm />
+      </div>
     </div>
   );
 }

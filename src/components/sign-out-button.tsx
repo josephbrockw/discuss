@@ -7,7 +7,9 @@ export default function SignOutButton() {
   return (
     <Button 
       type="button" 
-      onClick={() => signOut()}
+      color="primary"
+      variant="flat"
+      onPress={() => signOut()}
     >
       Sign Out
     </Button>
