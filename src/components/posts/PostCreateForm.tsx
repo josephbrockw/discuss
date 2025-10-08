@@ -13,8 +13,12 @@ import { createPost } from "@/actions";
 import FormButton from "@/components/common/FormButton";
 import { errorMessageFormatter } from "@/utils/textFormatting";
 
-export default function PostCreateForm() {
-  const [formState, action, isPending] = useActionState(createPost, {
+interface PostCreateFormProps {
+  topicSlug: string;
+}
+
+export default function PostCreateForm({ topicSlug }: PostCreateFormProps) {
+  const [formState, action, isPending] = useActionState(createPost.bind(null, topicSlug), {
     errors: {}
   });
 

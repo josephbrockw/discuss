@@ -26,6 +26,7 @@ interface CreatePostFormState {
 }
 
 export async function createPost(
+    topicSlug: string,
     formState: CreatePostFormState,
     formData: FormData
 ): Promise<CreatePostFormState> {
@@ -34,6 +35,7 @@ export async function createPost(
         content: formData.get("content"),
     });
 
+    // Handle validation errors
     if (!result.success) {
         const fieldErrors = result.error.flatten().fieldErrors;
         return {
@@ -41,8 +43,9 @@ export async function createPost(
         };
     }
 
+    // Ensure the user is authenticated
     const session = await auth();
-    if (!session || !session.user) {
+    if (!session || !session.user || !session.user.id) {
         return {
             errors: {
                 _form: ["You must be signed in to create a post"]
@@ -50,8 +53,48 @@ export async function createPost(
         };
     }
 
-    return {
-        errors: {}
-    };
-    // TODO: Revalidate the topic detail page
+    // Retrieve the topic by its slug
+    const topic = await db.topic.findUnique({
+        where: {
+            slug: topicSlug
+        }
+    });
+    if (!topic) {
+        return {
+            errors: {
+                _form: ["The specified topic does not exist"]
+            }
+        };
+    }
+
+    // Create the post
+    let post: Post;
+    try {
+        post = await db.post.create({
+            data: {
+                title: result.data.title,
+                content: result.data.content,
+                userId: session.user.id,
+                topicId: topic.id,
+            }
+        }); 
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return {
+                errors: {
+                    _form: [error.message]
+                }
+            };
+        }
+
+        return {
+            errors: {
+                _form: ["Failed to create post"]
+            }
+        };
+    }
+    
+    // Revalidate the topic page and redirect to the new post
+    revalidatePath(paths.topicDetail(topicSlug));
+    redirect(paths.postDetail(topicSlug, post.id));
 }

@@ -17,7 +17,7 @@ export default async function TopicDetailPage({ params }: TopicDetailPageProps) 
         </h1>
       </div>
       <div>
-        <PostCreateForm />
+        <PostCreateForm topicSlug={slug} />
       </div>
     </div>
   )
